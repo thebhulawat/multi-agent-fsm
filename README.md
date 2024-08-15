@@ -1,6 +1,6 @@
 # Structured JSON is all you need
 
-This project implements a multi-agent framework by modeling agents as Finite State Machines (FSM). OpenAI's Structured JSON feature, this offers a simpler way to create reliable agents without relying on complex frameworks.
+This project implements a multi-agent framework by modeling agents as Finite State Machines (FSM). OpenAI's Structured JSON offers a simpler way to create reliable agents without relying on complex beefy frameworks.
 
 ## Overview
 
@@ -16,6 +16,11 @@ The project uses a Planner-Executor model where:
 - `Agent`: Represents either a Planner or Executor, interacting with OpenAI's API.
 - `Memory`: Maintains the current state, task list, and other relevant information for orchestrator.
 - `State`: Enum representing different states (PLAN, EXECUTE, COMPLETED).
+
+## Flow Diagram
+
+![Flow Diagram](fsm.png)
+
 
 ## How to Start the Project
 
@@ -59,6 +64,3 @@ structured-json-agents/
 └── README.md
 ```
 
-## Flow Diagram
-
-![Flow Diagram](fsm.png)
