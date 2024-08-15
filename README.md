@@ -34,7 +34,7 @@ The project uses a Planner-Executor model where:
 2. Install dependencies:
 
    ```
-   pip install -r requirements.txt
+   poetry install 
    ```
 
 3. Set up your OpenAI API key:
@@ -45,22 +45,7 @@ The project uses a Planner-Executor model where:
 
 4. Run the main script:
    ```
-   python main.py
+   poetry run python main.py
    ```
 
-## Project Structure
-
-```
-structured-json-agents/
-├── agent/
-│   └── agent.py
-├── models/
-│   └── models.py
-├── orchestrator/
-│   └── orchestrator.py
-├── prompts/
-│   └── prompts.py
-├── main.py
-└── README.md
-```
 
