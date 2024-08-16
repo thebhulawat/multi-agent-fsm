@@ -1,6 +1,6 @@
 # Structured JSON is all you need
 
-This project implements a multi-agent framework by modeling agents as Finite State Machines (FSM). OpenAI's Structured JSON offers a simpler way to create reliable agents without relying on complex beefy frameworks.
+This project implements a multi-agent framework by modeling agents as Finite State Machines (FSM). [OpenAI's Structured JSON] (https://platform.openai.com/docs/guides/structured-outputs/) offers a simpler way to create reliable agents without relying on complex beefy frameworks.
 
 ## Overview
 
@@ -12,15 +12,14 @@ The project uses a Planner-Executor model where:
 
 ## Key Components
 
+- `State`: Enum representing different states (PLAN, EXECUTE, COMPLETED). Can add more states if needed.
 - `Orchestrator`: Manages the overall flow and state transitions.
-- `Agent`: Represents either a Planner or Executor, interacting with OpenAI's API.
-- `Memory`: Maintains the current state, task list, and other relevant information for orchestrator.
-- `State`: Enum representing different states (PLAN, EXECUTE, COMPLETED).
+- `Agent`: Represents either a Planner or Executor, interacting with OpenAI's API. Can add more agents if needed.
+- `Memory`: Maintains the current state, task list, and other relevant information for orchestrator. Memory is extensible to add arbitrary fields as needed. 
 
 ## Flow Diagram
 
 ![Flow Diagram](fsm.png)
-
 
 ## How to Start the Project
 
@@ -34,7 +33,7 @@ The project uses a Planner-Executor model where:
 2. Install dependencies:
 
    ```
-   poetry install 
+   poetry install
    ```
 
 3. Set up your OpenAI API key:
@@ -47,5 +46,3 @@ The project uses a Planner-Executor model where:
    ```
    poetry run python main.py
    ```
-
-
