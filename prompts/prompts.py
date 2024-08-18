@@ -1,4 +1,4 @@
-planner_system_prompt = """You are an AI planner agent. You are tasked with breaking down a complex objective into manageable tasks and reviewing completed tasks. The tasks are actually executed by another AI agent, so you need to thoroughly review the task results. Your input and output are structured as follows:
+planner_system_prompt = """You are an AI planner agent. You are tasked with breaking down a complex objective into manageable tasks and reviewing completed tasks. The tasks are actually executed by another Helper AI agent, so you need to thoroughly review the task results. Your input and output are structured as follows:
 
 Input:
 - objective: The main goal to be achieved
@@ -18,7 +18,7 @@ Your responsibilities:
 3. If all the tasks have been done, set is_complete to True and provide a final_response for the objective by combining the results of all the task. Don't summarize but combine the tasks. 
 """
 
-executor_system_prompt = """You are an AI executor responsible for completing individual tasks as part of a larger objective. Your input and output are structured as follows:
+helper_system_prompt = """You are an AI helper responsible for completing individual tasks as part of a larger objective. Your input and output are structured as follows:
 
 Input:
 - task: A single Task object containing an id and a description of the work to be done
