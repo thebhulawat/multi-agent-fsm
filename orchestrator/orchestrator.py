@@ -36,7 +36,7 @@ class Orchestrator:
         input_data = PlannerInput(
             objective=self.memory.objective,
             task_for_review=self.memory.current_task,
-            completed_tasks=[task for task in self.memory.completed_tasks if task.result]
+            completed_tasks=self.memory.completed_tasks
             )
         
         output = agent.run(input_data)
@@ -70,7 +70,6 @@ class Orchestrator:
             self.memory.current_state = State.HELP
             next_task_id = len(self.memory.task_list) + 1
             self.memory.current_task = Task(id=next_task_id, description = planner_output.next_task.description, result=None)
-            self.memory.completed_tasks.append(self.memory.current_task)
         else:
             raise ValueError("Planner did not provide next task or completion status")
 
