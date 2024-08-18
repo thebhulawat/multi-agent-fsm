@@ -16,9 +16,9 @@ class Task(BaseModel):
 class Memory(BaseModel):
     objective: str
     current_state: State
-    final_response: str
-    completed_tasks: List[Task]
-    current_task: Task
+    final_response: Optional[str]
+    completed_tasks: Optional[List[Task]]
+    current_task: Optional[Task]
 
     class Config:
         use_enum_values = True

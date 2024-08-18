@@ -14,6 +14,7 @@ The project uses a Planner-Helper model where:
 2. The Helper agent completes individual tasks.
 3. An Orchestrator manages the state transitions and coordinates between agents.
 
+You can add more agents like Planner & Helper. 
 
 ## Key Components
 

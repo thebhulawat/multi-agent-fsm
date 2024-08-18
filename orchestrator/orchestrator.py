@@ -14,7 +14,7 @@ class Orchestrator:
         while self.memory.current_state != State.COMPLETED:
             self._handle_state()
 
-        self._print_final_response(self.memory)
+        self._print_final_response()
         return self.memory
 
     def _handle_state(self):
@@ -31,7 +31,7 @@ class Orchestrator:
         
     def _handle_plan_state(self):
         agent = self.state_to_agent_map[State.PLAN]
-        self._print_memory_and_agent(self.memory, agent.name)
+        self._print_memory_and_agent(agent.name)
     
         input_data = PlannerInput(
             objective=self.memory.objective,
@@ -48,7 +48,7 @@ class Orchestrator:
     
     def _handle_help_state(self):
         agent = self.state_to_agent_map[State.HELP]
-        self._print_memory_and_agent(self.memory, agent.name)
+        self._print_memory_and_agent(agent.name)
     
         input_data = HelperInput(task=self.memory.current_task)
         
@@ -56,7 +56,7 @@ class Orchestrator:
 
         self._print_task_result(output.completed_task)
         
-        self._update_memory_from_helper(self.memory, output)
+        self._update_memory_from_helper(output)
         
         print(f"{Fore.MAGENTA}Helper has completed a task.")
         
@@ -68,19 +68,18 @@ class Orchestrator:
             self.memory.final_response = planner_output.final_response
         elif planner_output.next_task:
             self.memory.current_state = State.HELP
-            next_task_id = len(self.memory.task_list) + 1
+            next_task_id = len(self.memory.completed_tasks) + 1
             self.memory.current_task = Task(id=next_task_id, description = planner_output.next_task.description, result=None)
         else:
             raise ValueError("Planner did not provide next task or completion status")
 
     
     def _update_memory_from_helper(self, helper_output: HelperOutput):
-        for task in self.memory.completed_tasks:
-            if task.id == helper_output.completed_task.id:
-                task.result = helper_output.completed_task.result
-                break
+        self.memory.completed_tasks.append(helper_output.completed_task)
         self.memory.current_task = None
         self.memory.current_state = State.PLAN
+        print("naman")
+        print(self.memory.completed_tasks)
 
     def _print_memory_and_agent(self, agent_type: str):
         print(f"{Fore.CYAN}{'='*50}")
@@ -90,15 +89,18 @@ class Orchestrator:
             print(
                 f"{Fore.YELLOW}Current Task: {Fore.GREEN}{self.memory.current_task.description}"
             )
-        print(f"{Fore.YELLOW}Task List:")
-        for task in self.memory.completed_tasks:
-            status = "✓" if task.result else " "
-            print(f"{Fore.GREEN}  [{status}] {task.description}")
+        if len(self.memory.completed_tasks) == 0: 
+            print(f"{Fore.YELLOW}Completed Tasks:{Fore.GREEN} none")
+        else:
+            print(f"{Fore.YELLOW}Completed Tasks:")
+            for task in self.memory.completed_tasks:
+                status = "✓" if task.result else " "
+                print(f"{Fore.GREEN}  [{status}] {task.description}")
         print(f"{Fore.CYAN}{'='*50}")
 
     def _print_task_result(self, task: Task):
         print(f"{Fore.CYAN}{'='*50}")
-        print(f"{Fore.YELLOW}Task Completed: {Fore.GREEN}{task.description}")
+        print(f"{Fore.YELLOW}Completed Task: {Fore.GREEN}{task.description}")
         print(f"{Fore.YELLOW}Result:")
         wrapped_result = textwrap.wrap(task.result, width=80)
         for line in wrapped_result:

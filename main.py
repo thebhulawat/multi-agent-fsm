@@ -5,7 +5,7 @@ from prompts.prompts import planner_system_prompt, helper_system_prompt
 
 if __name__ == "__main__":
     initial_memory = Memory(
-        objective="Create a report on AI advancements in 2022",
+        objective="Create a report on climate change in 2022",
         current_state=State.PLAN,
         completed_tasks=[],
         current_task=None,
@@ -33,4 +33,4 @@ if __name__ == "__main__":
     
     final_memory = orchestrator.run()
 
-    print(f"Final Response: {final_memory.final_response}")
+    print(f"Final Response: {final_memory}")
