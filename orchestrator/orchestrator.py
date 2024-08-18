@@ -1,4 +1,4 @@
-from models.models import Memory, State, Task, PlannerInput, PlannerOutput, ExecutorInput, ExecutorOutput
+from models.models import Memory, State, Task, PlannerInput, PlannerOutput, HelperInput, HelperOutput
 from agent.agent import Agent
 from colorama import Fore, init
 import textwrap
@@ -23,13 +23,13 @@ class Orchestrator:
             raise ValueError(f"Unhandled state! No agent for {current_state}")
     
         if current_state == State.PLAN:
-            self._handle_planner()
-        elif current_state == State.EXECUTE:
-            self._handle_executor()
+            self._handle_plan_state()
+        elif current_state == State.HELP:
+            self._handle_help_state()
         else:
             raise ValueError(f"Unhandled state: {current_state}")
         
-    def _handle_planner(self):
+    def _handle_plan_state(self):
         agent = self.state_to_agent_map[State.PLAN]
         self._print_memory_and_agent(self.memory, agent.name)
     
@@ -41,47 +41,47 @@ class Orchestrator:
         
         output = agent.invoke(input_data)
         
-        self._update_memory_from_planner(self.memory, output)
+        self._update_memory_from_planner(output)
         
         print(f"{Fore.MAGENTA}Planner has updated the memory.")
 
     
-    def _handle_executor(self):
-        agent = self.state_to_agent_map[State.EXECUTE]
+    def _handle_help_state(self):
+        agent = self.state_to_agent_map[State.HELP]
         self._print_memory_and_agent(self.memory, agent.name)
     
-        input_data = ExecutorInput(task=self.memory.current_task)
+        input_data = HelperInput(task=self.memory.current_task)
         
-        output: ExecutorOutput = agent.invoke(input_data)
+        output: HelperOutput = agent.invoke(input_data)
 
         self._print_task_result(output.completed_task)
         
-        self._update_memory_from_executor(self.memory, output)
+        self._update_memory_from_helper(self.memory, output)
         
-        print(f"{Fore.MAGENTA}Executor has completed a task.")
+        print(f"{Fore.MAGENTA}Helper has completed a task.")
         
 
     
-    def _update_memory_from_planner(self, memory: Memory, planner_output: PlannerOutput):
+    def _update_memory_from_planner(self, planner_output: PlannerOutput):
         if planner_output.is_complete:
-            memory.current_state = State.COMPLETED
-            memory.final_response = planner_output.final_response
+            self.memory.current_state = State.COMPLETED
+            self.memory.final_response = planner_output.final_response
         elif planner_output.next_task:
-            memory.current_state = State.EXECUTE
-            next_task_id = len(memory.task_list) + 1
-            memory.current_task = Task(id=next_task_id, description=planner_output.next_task.description, result=None)
-            memory.task_list.append(memory.current_task)
+            self.memory.current_state = State.HELP
+            next_task_id = len(self.memory.task_list) + 1
+            self.memory.current_task = Task(id=next_task_id, description=planner_output.next_task.description, result=None)
+            self.memory.task_list.append(self.memory.current_task)
         else:
             raise ValueError("Planner did not provide next task or completion status")
 
     
-    def _update_memory_from_executor(self, memory: Memory, executor_output: ExecutorOutput):
-        for task in memory.task_list:
-            if task.id == executor_output.completed_task.id:
-                task.result = executor_output.completed_task.result
+    def _update_memory_from_helper(self, helper_output: HelperOutput):
+        for task in self.memory.task_list:
+            if task.id == helper_output.completed_task.id:
+                task.result = helper_output.completed_task.result
                 break
-        memory.current_task = None
-        memory.current_state = State.PLAN
+        self.memory.current_task = None
+        self.memory.current_state = State.PLAN
 
     
     def _print_memory_and_agent(self, memory: Memory, agent_type: str):

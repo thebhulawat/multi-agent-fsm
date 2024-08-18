@@ -2,10 +2,10 @@ from pydantic import BaseModel
 from enum import Enum
 from typing import List, Optional
 
-#Global
+# Global
 class State(str, Enum):
     PLAN = "plan"
-    EXECUTE = "execute"
+    HELP = "help"
     COMPLETED = "completed"
 
 class Task(BaseModel):
@@ -23,7 +23,7 @@ class Memory(BaseModel):
     class Config:
         use_enum_values = True
 
-#Planner 
+# Planner 
 class PlannerInput(BaseModel):
     objective: str
     task_for_review: Optional[Task] 
@@ -34,9 +34,9 @@ class PlannerOutput(BaseModel):
     is_complete: bool
     final_response: Optional[str] 
 
-#Executor
-class ExecutorInput(BaseModel):
+# Helper
+class HelperInput(BaseModel):
     task: Task
 
-class ExecutorOutput(BaseModel):
+class HelperOutput(BaseModel):
     completed_task: Task
