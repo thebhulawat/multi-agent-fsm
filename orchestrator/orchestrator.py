@@ -36,10 +36,10 @@ class Orchestrator:
         input_data = PlannerInput(
             objective=self.memory.objective,
             task_for_review=self.memory.current_task,
-            completed_tasks=[task for task in self.memory.task_list if task.result]
+            completed_tasks=[task for task in self.memory.completed_tasks if task.result]
             )
         
-        output = agent.invoke(input_data)
+        output = agent.run(input_data)
         
         self._update_memory_from_planner(output)
         
@@ -52,7 +52,7 @@ class Orchestrator:
     
         input_data = HelperInput(task=self.memory.current_task)
         
-        output: HelperOutput = agent.invoke(input_data)
+        output: HelperOutput = agent.run(input_data)
 
         self._print_task_result(output.completed_task)
         
@@ -69,14 +69,14 @@ class Orchestrator:
         elif planner_output.next_task:
             self.memory.current_state = State.HELP
             next_task_id = len(self.memory.task_list) + 1
-            self.memory.current_task = Task(id=next_task_id, description=planner_output.next_task.description, result=None)
-            self.memory.task_list.append(self.memory.current_task)
+            self.memory.current_task = Task(id=next_task_id, description = planner_output.next_task.description, result=None)
+            self.memory.completed_tasks.append(self.memory.current_task)
         else:
             raise ValueError("Planner did not provide next task or completion status")
 
     
     def _update_memory_from_helper(self, helper_output: HelperOutput):
-        for task in self.memory.task_list:
+        for task in self.memory.completed_tasks:
             if task.id == helper_output.completed_task.id:
                 task.result = helper_output.completed_task.result
                 break
@@ -92,7 +92,7 @@ class Orchestrator:
                 f"{Fore.YELLOW}Current Task: {Fore.GREEN}{self.memory.current_task.description}"
             )
         print(f"{Fore.YELLOW}Task List:")
-        for task in self.memory.task_list:
+        for task in self.memory.completed_tasks:
             status = "✓" if task.result else " "
             print(f"{Fore.GREEN}  [{status}] {task.description}")
         print(f"{Fore.CYAN}{'='*50}")

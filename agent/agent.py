@@ -11,7 +11,7 @@ class Agent:
         self.input_format = input_format
         self.output_format = output_format
 
-    def invoke(self, input_data: BaseModel) -> BaseModel:
+    def run(self, input_data: BaseModel) -> BaseModel:
         if not isinstance(input_data, self.input_format):
             raise ValueError(f"Input data must be of type {self.input_format.__name__}")
 

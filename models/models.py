@@ -15,10 +15,10 @@ class Task(BaseModel):
 
 class Memory(BaseModel):
     objective: str
-    final_response: Optional[str]
-    task_list: List[Task] 
-    current_task: Optional[Task]
     current_state: State
+    final_response: str
+    completed_tasks: List[Task]
+    current_task: Task
 
     class Config:
         use_enum_values = True

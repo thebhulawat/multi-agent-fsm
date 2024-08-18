@@ -7,7 +7,7 @@ if __name__ == "__main__":
     initial_memory = Memory(
         objective="Create a report on AI advancements in 2022",
         current_state=State.PLAN,
-        task_list=[],
+        completed_tasks=[],
         current_task=None,
         final_response=None
     )
@@ -15,21 +15,21 @@ if __name__ == "__main__":
     state_to_agent_map = {
         State.PLAN: Agent(
             name = "planner",
-            system_prompt=planner_system_prompt,
-            input_format=PlannerInput,
-            output_format=PlannerOutput, 
-            keep_message_history=False
+            system_prompt = planner_system_prompt,
+            input_format = PlannerInput,
+            output_format = PlannerOutput, 
+            keep_message_history = False
         ),
         State.HELP: Agent(
             name = "helper",
-            system_prompt=helper_system_prompt,
-            input_format=HelperInput,
-            output_format=HelperOutput,
-            keep_message_history=False
+            system_prompt = helper_system_prompt,
+            input_format = HelperInput,
+            output_format = HelperOutput,
+            keep_message_history = False
         )
     }
 
-    orchestrator = Orchestrator(initial_memory, state_to_agent_map=state_to_agent_map)
+    orchestrator = Orchestrator(initial_memory, state_to_agent_map = state_to_agent_map)
     
     final_memory = orchestrator.run()
 
