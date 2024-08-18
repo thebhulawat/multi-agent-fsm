@@ -83,20 +83,20 @@ class Orchestrator:
         self.memory.current_task = None
         self.memory.current_state = State.PLAN
 
-    
-    def _print_memory_and_agent(self, memory: Memory, agent_type: str):
+    def _print_memory_and_agent(self, agent_type: str):
         print(f"{Fore.CYAN}{'='*50}")
-        print(f"{Fore.YELLOW}Current State: {Fore.GREEN}{memory.current_state}")
+        print(f"{Fore.YELLOW}Current State: {Fore.GREEN}{self.memory.current_state}")
         print(f"{Fore.YELLOW}Agent: {Fore.GREEN}{agent_type}")
-        if memory.current_task:
-            print(f"{Fore.YELLOW}Current Task: {Fore.GREEN}{memory.current_task.description}")
+        if self.memory.current_task:
+            print(
+                f"{Fore.YELLOW}Current Task: {Fore.GREEN}{self.memory.current_task.description}"
+            )
         print(f"{Fore.YELLOW}Task List:")
-        for task in memory.task_list:
+        for task in self.memory.task_list:
             status = "✓" if task.result else " "
             print(f"{Fore.GREEN}  [{status}] {task.description}")
         print(f"{Fore.CYAN}{'='*50}")
 
-    
     def _print_task_result(self, task: Task):
         print(f"{Fore.CYAN}{'='*50}")
         print(f"{Fore.YELLOW}Task Completed: {Fore.GREEN}{task.description}")
@@ -106,13 +106,12 @@ class Orchestrator:
             print(f"{Fore.WHITE}{line}")
         print(f"{Fore.CYAN}{'='*50}")
 
-    
-    def _print_final_response(self, memory: Memory):
+    def _print_final_response(self):
         print(f"\n{Fore.GREEN}{'='*50}")
         print(f"{Fore.GREEN}Objective Completed!")
         print(f"{Fore.GREEN}{'='*50}")
         print(f"{Fore.YELLOW}Final Response:")
-        wrapped_response = textwrap.wrap(memory.final_response, width=80)
+        wrapped_response = textwrap.wrap(self.memory.final_response, width=80)
         for line in wrapped_response:
             print(f"{Fore.WHITE}{line}")
         print(f"{Fore.GREEN}{'='*50}")
